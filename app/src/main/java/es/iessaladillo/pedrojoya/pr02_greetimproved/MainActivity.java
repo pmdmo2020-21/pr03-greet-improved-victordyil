@@ -16,14 +16,16 @@ import androidx.core.content.ContextCompat;
 
 import es.iessaladillo.pedrojoya.pr02_greetimproved.databinding.MainActivityBinding;
 
+import static android.widget.Toast.makeText;
 import static es.iessaladillo.pedrojoya.pr02_greetimproved.R.color.colorAccent;
 
 public class MainActivity extends AppCompatActivity {
     private MainActivityBinding binding;
     private int quantity;
     final int maxChar = 20;
+    private Toast toast;
 
-    // TODO: 11/10/2020 Limpiar Codigo     
+    // TODO: 11/10/2020 Limpiar Codigo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
         setupViews();
     }
 
+
+    // Ajustar - Cambiar vistas
     private void setupViews() {
         setValue();
         binding.mrRB.setChecked(true);
@@ -49,50 +53,49 @@ public class MainActivity extends AppCompatActivity {
         comprobadorTexto();
     }
 
+    private void toastShower(String s) {
+        toast = Toast.makeText(this, s, Toast.LENGTH_SHORT);
+        toast.show();
+    }
+
     void saludar() {
         esconderTeclado(binding.BTNGreet);
         if (binding.nameET.getText().length() == 0)
             isValid(binding.nameET, false);
         else if (binding.subnameET.getText().length() == 0)
             isValid(binding.subnameET, false);
-        Toast toast;
+
         if (binding.nameET.length() > 0 && binding.subnameET.length() > 0) {
             if (quantity != 10 || binding.swPremium.isChecked()) {
                 if (binding.CBPolitely.isChecked()) {
                     switch (binding.RGGender.getCheckedRadioButtonId()) {
                         case R.id.mrRB:
-                            toast = Toast.makeText(this, String.format(getString(R.string.señorEducado), binding.nameET.getText(), binding.subnameET.getText()), Toast.LENGTH_SHORT);
-                            toast.show();
+                            toastShower( String.format(getString(R.string.señorEducado), binding.nameET.getText(), binding.subnameET.getText()));
                             break;
                         case R.id.mrsRB:
-                            toast = Toast.makeText(this, (String.format(getString(R.string.señoritaEducado), binding.nameET.getText(), binding.subnameET.getText())), Toast.LENGTH_SHORT);
-                            toast.show();
+                            toastShower( String.format(getString(R.string.señoritaEducado), binding.nameET.getText(), binding.subnameET.getText()));
                             break;
                         case R.id.msRB:
-                            toast = Toast.makeText(this, String.format(getString(R.string.señoraEducado), binding.nameET.getText(), binding.subnameET.getText()), Toast.LENGTH_SHORT);
-                            toast.show();
+                            toastShower( String.format(getString(R.string.señoraEducado), binding.nameET.getText(), binding.subnameET.getText()));
                             break;
                     }
                 } else {
                     switch (binding.RGGender.getCheckedRadioButtonId()) {
                         case R.id.mrRB:
-                            toast = Toast.makeText(this, String.format(getString(R.string.mrSaludo), binding.nameET.getText(), binding.subnameET.getText()), Toast.LENGTH_SHORT);
-                            toast.show();
+                            toastShower( String.format(getString(R.string.mrSaludo), binding.nameET.getText(), binding.subnameET.getText()));
                             break;
                         case R.id.mrsRB:
-                            toast = Toast.makeText(this, String.format(getString(R.string.señoritaSaludo), binding.nameET.getText(), binding.subnameET.getText()), Toast.LENGTH_SHORT);
-                            toast.show();
+                            toastShower( String.format(getString(R.string.señoritaSaludo), binding.nameET.getText(), binding.subnameET.getText()));
                             break;
                         case R.id.msRB:
-                            toast = Toast.makeText(this, String.format(getString(R.string.señoraSaludo), binding.nameET.getText(), binding.subnameET.getText()), Toast.LENGTH_SHORT);
-                            toast.show();
+                            toastShower( String.format(getString(R.string.señoraSaludo), binding.nameET.getText(), binding.subnameET.getText()));
                             break;
                     }
                 }
                 quantity++;
                 setValue();
             } else {
-                toast = Toast.makeText(this, getString(R.string.avisoPremium), Toast.LENGTH_SHORT);
+                toast = makeText(this, getString(R.string.avisoPremium), Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
@@ -114,6 +117,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void setValue() {
+        binding.progressBar.setProgress(quantity);
+        binding.contador.setText(String.format(getString(R.string.number), quantity));
+    }
+
+    private void changeColor(TextView textView, boolean hasFocus) {
+        int colorResID = hasFocus ? colorAccent : R.color.textPrimary;
+        textView.setTextColor(ContextCompat.getColor(this, colorResID));
+    }
+
+
+    //Funcionalidad y Control
+
     private void checkPremium(boolean isChecked) {
         if (isChecked) {
             binding.progressBar.setVisibility(View.INVISIBLE);
@@ -128,9 +144,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setValue() {
-        binding.progressBar.setProgress(quantity);
-        binding.contador.setText(String.format(getString(R.string.number), quantity));
+    private void focusChanger() {
+        binding.nameET.setOnFocusChangeListener((view, b) -> {
+            changeColor(binding.nameCharCounter, b);
+            isValid(binding.nameET, b);
+        });
+        binding.subnameET.setOnFocusChangeListener((view, b) -> {
+            changeColor(binding.subnameCounter, b);
+            if (!(binding.nameET.getText().length() == 0)) isValid(binding.subnameET, b);
+        });
     }
 
     private void comprobadorTexto() {
@@ -161,32 +183,16 @@ public class MainActivity extends AppCompatActivity {
         comprobarApellido(binding.nameET, binding.nameCharCounter);
     }
 
-    private void focusChanger() {
-        binding.nameET.setOnFocusChangeListener((view, b) -> {
-            changeColor(binding.nameCharCounter, b);
-            isValid(binding.nameET, b);
-        });
-        binding.subnameET.setOnFocusChangeListener((view, b) -> {
-            changeColor(binding.subnameCounter, b);
-            if (!(binding.nameET.getText().length() == 0)) isValid(binding.subnameET, b);
-        });
-    }
-
-    private void changeColor(TextView textView, boolean hasFocus) {
-        int colorResID = hasFocus ? colorAccent : R.color.textPrimary;
-        textView.setTextColor(ContextCompat.getColor(this, colorResID));
+    private void esconderTeclado(@NonNull View view) {
+        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void isValid(EditText textView, boolean b) {
         if (!b && textView.getText().length() == 0) {
             textView.setError("Required");
         } else textView.setError(null);
-    }
-
-    private void esconderTeclado(@NonNull View view) {
-        InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 }
