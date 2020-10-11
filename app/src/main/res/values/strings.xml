@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Greet Improved</string>
+    <string name="premium">Premium</string>
+    <string name="name">Name</string>
+    <string name="subname">Subname</string>
+    <string name="gender">Treatment</string>
+    <string name="mrGender">mr</string>
+    <string name="mrsGender">mrs</string>
+    <string name="msGender">ms</string>
+    <string name="politely">Politely</string>
+    <string name="avisoPremium">Pay premium. ¡Last adversitement!</string>
+    <string name="mrSaludo">%s %s Sup?, Whazzup?</string>
+    <string name="señoritaSaludo">%s %s Are you OK?, You alright?, Alright mate?</string>
+    <string name="señoraSaludo"> %s %s YO!</string>
+    <string name="señoraEducado">Lady %s %s How’s your day going?</string>
+    <string name="señoritaEducado">Miss %s %s How have you been?</string>
+    <string name="señorEducado">Sir %s %s How do you do?</string>
+    <string name="avisoRelleno">Please fill all inputs</string>
+    <string name="number">%d of 10</string>ç
+    <plurals name="charCount">
+        <item quantity="one">%1$d char</item>
+        <item quantity="other">%1$d chars</item>
+    </plurals>
 </resources>
